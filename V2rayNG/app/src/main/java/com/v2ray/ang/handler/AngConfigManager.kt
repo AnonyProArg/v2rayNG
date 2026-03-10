@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.text.TextUtils
 import android.util.Log
 import com.v2ray.ang.AppConfig
-import com.v2ray.ang.AppConfig.HY2
 import com.v2ray.ang.R
 import com.v2ray.ang.dto.ProfileItem
 import com.v2ray.ang.dto.SubscriptionCache
@@ -161,15 +160,28 @@ object AngConfigManager {
      * @param append Whether to append the configurations.
      * @return A pair containing the number of configurations and subscriptions imported.
      */
+    fun importVlessUri(vlessUri: String, subid: String = "", remarksOverride: String? = null): Boolean {
+        return try {
+            val config = VlessFmt.parse(vlessUri.trim()) ?: return false
+            config.subscriptionId = subid
+            if (!remarksOverride.isNullOrBlank()) {
+                config.remarks = remarksOverride.trim()
+            }
+            config.description = generateDescription(config)
+            val key = MmkvManager.encodeServerConfig("", config)
+            MmkvManager.setSelectServer(key)
+            true
+        } catch (e: Exception) {
+            Log.e(AppConfig.TAG, "Failed to import VLESS URI", e)
+            false
+        }
+    }
+
     fun importBatchConfig(server: String?, subid: String, append: Boolean): Pair<Int, Int> {
         var count = parseBatchConfig(Utils.decode(server), subid, append)
         if (count <= 0) {
             count = parseBatchConfig(server, subid, append)
         }
-        if (count <= 0) {
-            count = parseCustomConfigServer(server, subid)
-        }
-
         var countSub = parseBatchSubscription(server)
         if (countSub <= 0) {
             countSub = parseBatchSubscription(Utils.decode(server))
@@ -392,20 +404,8 @@ object AngConfigManager {
                 return null
             }
 
-            val config = if (str.startsWith(EConfigType.VMESS.protocolScheme)) {
-                VmessFmt.parse(str)
-            } else if (str.startsWith(EConfigType.SHADOWSOCKS.protocolScheme)) {
-                ShadowsocksFmt.parse(str)
-            } else if (str.startsWith(EConfigType.SOCKS.protocolScheme)) {
-                SocksFmt.parse(str)
-            } else if (str.startsWith(EConfigType.TROJAN.protocolScheme)) {
-                TrojanFmt.parse(str)
-            } else if (str.startsWith(EConfigType.VLESS.protocolScheme)) {
+            val config = if (str.startsWith(EConfigType.VLESS.protocolScheme)) {
                 VlessFmt.parse(str)
-            } else if (str.startsWith(EConfigType.WIREGUARD.protocolScheme)) {
-                WireguardFmt.parse(str)
-            } else if (str.startsWith(EConfigType.HYSTERIA2.protocolScheme) || str.startsWith(HY2)) {
-                Hysteria2Fmt.parse(str)
             } else {
                 null
             }
