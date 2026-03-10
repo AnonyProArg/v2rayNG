@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.text.TextUtils
 import android.util.Log
 import com.v2ray.ang.AppConfig
-import com.v2ray.ang.AppConfig.HY2
 import com.v2ray.ang.R
 import com.v2ray.ang.dto.ProfileItem
 import com.v2ray.ang.dto.SubscriptionCache
@@ -166,10 +165,6 @@ object AngConfigManager {
         if (count <= 0) {
             count = parseBatchConfig(server, subid, append)
         }
-        if (count <= 0) {
-            count = parseCustomConfigServer(server, subid)
-        }
-
         var countSub = parseBatchSubscription(server)
         if (countSub <= 0) {
             countSub = parseBatchSubscription(Utils.decode(server))
@@ -392,20 +387,8 @@ object AngConfigManager {
                 return null
             }
 
-            val config = if (str.startsWith(EConfigType.VMESS.protocolScheme)) {
-                VmessFmt.parse(str)
-            } else if (str.startsWith(EConfigType.SHADOWSOCKS.protocolScheme)) {
-                ShadowsocksFmt.parse(str)
-            } else if (str.startsWith(EConfigType.SOCKS.protocolScheme)) {
-                SocksFmt.parse(str)
-            } else if (str.startsWith(EConfigType.TROJAN.protocolScheme)) {
-                TrojanFmt.parse(str)
-            } else if (str.startsWith(EConfigType.VLESS.protocolScheme)) {
+            val config = if (str.startsWith(EConfigType.VLESS.protocolScheme)) {
                 VlessFmt.parse(str)
-            } else if (str.startsWith(EConfigType.WIREGUARD.protocolScheme)) {
-                WireguardFmt.parse(str)
-            } else if (str.startsWith(EConfigType.HYSTERIA2.protocolScheme) || str.startsWith(HY2)) {
-                Hysteria2Fmt.parse(str)
             } else {
                 null
             }
