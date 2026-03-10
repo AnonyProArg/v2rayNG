@@ -133,6 +133,13 @@
     <!-- PerAppProxyActivity -->
     <string name="msg_dialog_progress">Loading</string>
     <string name="menu_item_search">Search</string>
+    <string name="menu_item_configure_vless_json">VLESS JSON config</string>
+    <string name="hint_vless_json_template">{
+  "vlessUri": "vless://uuid@host:443?encryption=none&security=tls&type=ws&host=example.com&path=%2F#MyNode",
+  "remarks": "Mi servidor"
+}</string>
+    <string name="title_vless_json_config">VLESS JSON</string>
+    <string name="toast_vless_json_saved">VLESS config saved</string>
     <string name="menu_item_select_all">Select all</string>
     <string name="menu_item_invert_selection">Invert selection</string>
     <string name="msg_enter_keywords">Enter keywords</string>
