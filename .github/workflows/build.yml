@@ -104,20 +104,20 @@ jobs:
           -Pandroid.injected.signing.store.password=mi_password \
           -Pandroid.injected.signing.key.alias=mi_alias \
           -Pandroid.injected.signing.key.password=mi_password \
-          -PabiFilters=armeabi-v7a
+          -PabiFilters=arm64-v8a
 
-    - name: Upload armeabi-v7a APK
+    - name: Upload arm64-v8a APK
       uses: actions/upload-artifact@v7
       if: ${{  success() }}
       with:
-        name: armeabi-v7a
-        path: ${{ github.workspace }}/V2rayNG/app/build/outputs/apk/*/release/*armeabi-v7a*.apk
+        name: arm64-v8a
+        path: ${{ github.workspace }}/V2rayNG/app/build/outputs/apk/*/release/*arm64-v8a*.apk
 
     - name: Upload to release
       uses: svenstaro/upload-release-action@v2
       if: github.event.inputs.release_tag != ''
       with:
-        file: ${{ github.workspace }}/V2rayNG/app/build/outputs/apk/*/release/*armeabi-v7a*.apk
+        file: ${{ github.workspace }}/V2rayNG/app/build/outputs/apk/*/release/*arm64-v8a*.apk
         tag: ${{ github.event.inputs.release_tag }}
         file_glob: true
         prerelease: true
