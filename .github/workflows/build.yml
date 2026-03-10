@@ -103,8 +103,14 @@ jobs:
           -Pandroid.injected.signing.store.file=${{ github.workspace }}/android_keystore.jks \
           -Pandroid.injected.signing.store.password=mi_password \
           -Pandroid.injected.signing.key.alias=mi_alias \
-          -Pandroid.injected.signing.key.password=mi_password \
-          -PabiFilters=armeabi-v7a
+          -Pandroid.injected.signing.key.password=mi_password
+    
+    - name: Upload arm64-v8a APK
+      uses: actions/upload-artifact@v7
+      if: ${{  success() }}
+      with:
+        name: arm64-v8a
+        path: ${{ github.workspace }}/V2rayNG/app/build/outputs/apk/*/release/*arm64-v8a*.apk
 
     - name: Upload armeabi-v7a APK
       uses: actions/upload-artifact@v7
@@ -113,11 +119,18 @@ jobs:
         name: armeabi-v7a
         path: ${{ github.workspace }}/V2rayNG/app/build/outputs/apk/*/release/*armeabi-v7a*.apk
 
+    - name: Upload x86 APK
+      uses: actions/upload-artifact@v7
+      if: ${{  success() }}
+      with:
+        name: x86-apk
+        path: ${{ github.workspace }}/V2rayNG/app/build/outputs/apk/*/release/*x86*.apk
+
     - name: Upload to release
       uses: svenstaro/upload-release-action@v2
       if: github.event.inputs.release_tag != ''
       with:
-        file: ${{ github.workspace }}/V2rayNG/app/build/outputs/apk/*/release/*armeabi-v7a*.apk
+        file: ${{ github.workspace }}/V2rayNG/app/build/outputs/apk/*/release/*.apk
         tag: ${{ github.event.inputs.release_tag }}
         file_glob: true
         prerelease: true
